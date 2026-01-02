@@ -1,0 +1,62 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="xterm.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: #000;
+            overflow: hidden;
+        }
+
+        #terminal {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal"></div>
+
+    <script src="xterm.js"></script>
+    <script src="xterm-addon-fit.js"></script>
+
+    <script>
+        const term = new Terminal({
+            convertEol: true,
+            cursorBlink: true,
+            scrollback: 8000
+        });
+
+        const fitAddon = new FitAddon.FitAddon();
+        term.loadAddon(fitAddon);
+
+        term.open(document.getElementById('terminal'));
+        term.focus();
+
+        term.onData(data => {
+            window.chrome.webview.postMessage({ type: "input", data });
+        });
+
+        window.chrome.webview.addEventListener('message', e => {
+            const msg = e.data;
+            if (!msg || !msg.type) return;
+            if (msg.type === "output") term.write(msg.data);
+            if (msg.type === "focus") term.focus();
+        });
+
+        window.chrome.webview.postMessage({ type: "ready" });
+
+        function doFitAndNotify() {
+            fitAddon.fit();
+            window.chrome.webview.postMessage({ type: "resize", cols: term.cols, rows: term.rows });
+        }
+
+        window.addEventListener('resize', () => doFitAndNotify());
+        setTimeout(doFitAndNotify, 50);
+    </script>
+</body>
+</html>

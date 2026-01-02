@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="WinSsh.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinSsh.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="ItemviewTemplate" x:Name="ItemviewTemplate">
+            <ItemContainer HorizontalAlignment="Left" Width="280" Height="80">
+                <Grid Padding="12" Background="{ThemeResource CardBackgroundFillColorDefault}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border Grid.Column="0" 
+                            Width="48" 
+                            Height="48" 
+                            CornerRadius="8"
+                            Background="{ThemeResource AccentFillColorDefaultBrush}"
+                            VerticalAlignment="Center">
+                        <SymbolIcon Symbol="{Binding Symbol}" 
+                                    Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"/>
+                    </Border>
+                    
+                    <StackPanel Grid.Column="1" 
+                                Orientation="Vertical" 
+                                VerticalAlignment="Center"
+                                Margin="12,0,0,0">
+                        <TextBlock Text="{Binding Name}" 
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding UserAndHost}" 
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                </Grid>
+            </ItemContainer>
+        </DataTemplate>
+    </Page.Resources>
+    
+    <Grid Padding="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <CommandBar Grid.Row="0" Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
+            <AppBarButton x:Name="addAppBarButton" Icon="Add" Label="Add" Click="addAppBarButton_Click" />
+            <AppBarButton x:Name="editAppBarButton" Icon="Edit" Label="Edit" Click="editAppBarButton_Click" />
+            <AppBarButton x:Name="connectAppBarButton" Icon="Go" Label="Connect" Click="connectAppBarButton_Click" />
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="deleteAppBarButton" Icon="Delete" Label="Delete" Click="deleteAppBarButton_Click" />
+                <AppBarButton x:Name="duplicateAppBarButton" Icon="Copy" Label="Duplicate" Click="duplicateAppBarButton_Click" />
+            </CommandBar.SecondaryCommands>
+
+        </CommandBar>
+        <TextBlock 
+            Grid.Row="1"
+            Text="Home"
+            Style="{StaticResource TitleTextBlockStyle}"
+            Margin="0"/>
+        
+        <ItemsView
+            x:Name="HomeItemsView"
+            HorizontalAlignment="Left"
+            Grid.Row="2"
+            ItemTemplate="{StaticResource ItemviewTemplate}"
+            SelectionMode="Single"
+            SelectionChanged="HomeItemsView_SelectionChanged">
+            <ItemsView.Layout>
+                <LinedFlowLayout ItemsStretch="Fill" LineHeight="120" LineSpacing="15" MinItemSpacing="0" />
+            </ItemsView.Layout>
+            
+        </ItemsView>
+        
+    </Grid>
+</Page>
